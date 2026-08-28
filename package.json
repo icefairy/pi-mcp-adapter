@@ -1,6 +1,6 @@
 {
   "name": "@icefairy/pi-mcp-adapter",
-  "version": "2.29.0",
+  "version": "2.29.2",
   "description": "MCP (Model Context Protocol) adapter extension for Pi coding agent",
   "type": "module",
   "types": "./index.ts",
@@ -42,7 +42,7 @@
     "test:vitest": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "postinstall": "patch-package"
+    "postinstall": "node -e \"try{require(\"patch-package\")}catch(e){}\" || npx patch-package 2>/dev/null || true"
   },
   "repository": {
     "type": "git",
