@@ -131,7 +131,7 @@ function resolveNamespaceEnvOverride(
 }
 
 function installMcpAdapter(pi: ExtensionAPI, options: McpAdapterOptions) {
-  const sessionConfig = options.config !== undefined ? cloneMcpConfig(options.config) : undefined;
+  const sessionConfig = options.config === undefined ? undefined : cloneMcpConfig(options.config);
   const programmaticConfig = sessionConfig !== undefined;
   let state: McpExtensionState | null = null;
   let initPromise: Promise<McpExtensionState> | null = null;
@@ -242,7 +242,7 @@ function installMcpAdapter(pi: ExtensionAPI, options: McpAdapterOptions) {
     const lifecycleMode = definition.lifecycle ?? "lazy";
     const persistsAfterFirstSpawn = lifecycleMode === "eager" || lifecycleMode === "lazy-keep-alive";
     const idleOverride = definition.idleTimeout ?? (persistsAfterFirstSpawn ? 0 : undefined);
-    targetState.lifecycle.registerServer(name, definition, idleOverride !== undefined ? { idleTimeout: idleOverride } : undefined);
+    targetState.lifecycle.registerServer(name, definition, idleOverride === undefined ? undefined : { idleTimeout: idleOverride });
     if (lifecycleMode === "keep-alive") targetState.lifecycle.markKeepAlive(name, definition);
   }
 
@@ -544,8 +544,8 @@ function installMcpAdapter(pi: ExtensionAPI, options: McpAdapterOptions) {
     const promise = initializeMcp(pi, ctx, owner, {
       ...(programmaticConfig || options.configPath !== undefined
         ? {
-            ...(earlyConfigPath !== undefined ? { configPath: earlyConfigPath } : {}),
-            ...(sessionConfig !== undefined ? { config: sessionConfig } : {}),
+            ...(earlyConfigPath === undefined ? {} : { configPath: earlyConfigPath }),
+            ...(sessionConfig === undefined ? {} : { config: sessionConfig }),
           }
         : {}),
       oauthRuntime,
@@ -1234,11 +1234,11 @@ function installMcpAdapter(pi: ExtensionAPI, options: McpAdapterOptions) {
 }
 
 export function createMcpAdapter(options: McpAdapterOptions = {}) {
-  const factoryConfig = options.config !== undefined ? cloneMcpConfig(options.config) : undefined;
+  const factoryConfig = options.config === undefined ? undefined : cloneMcpConfig(options.config);
   return function mcpAdapter(pi: ExtensionAPI) {
     installMcpAdapter(pi, {
-      ...(options.configPath !== undefined ? { configPath: options.configPath } : {}),
-      ...(factoryConfig !== undefined ? { config: cloneMcpConfig(factoryConfig) } : {}),
+      ...(options.configPath === undefined ? {} : { configPath: options.configPath }),
+      ...(factoryConfig === undefined ? {} : { config: cloneMcpConfig(factoryConfig) }),
     });
   };
 }

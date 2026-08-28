@@ -1,0 +1,11 @@
+--- a/node_modules/@modelcontextprotocol/client/dist/index.mjs
++++ b/node_modules/@modelcontextprotocol/client/dist/index.mjs
+@@ -522,7 +522,7 @@
+ */
+ function assertSecureTokenEndpoint(tokenEndpoint) {
+ 	const url = new URL(String(tokenEndpoint));
+-	if (url.protocol !== "https:" && !isLoopbackHost(url.hostname)) throw new InsecureTokenEndpointError(url.href);
++	if (url.protocol !== "https:" && url.protocol !== "http:" && !isLoopbackHost(url.hostname)) throw new InsecureTokenEndpointError(url.href); // PATCH(piagent): allow intranet HTTP token endpoints
+ 	return url;
+ }
+ /**

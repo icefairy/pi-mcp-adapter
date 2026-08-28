@@ -506,8 +506,8 @@ function mergeConfigs(base: McpConfig, next: McpConfig): McpConfig {
   const settings = next.settings ? { ...base.settings, ...next.settings } : base.settings;
   return {
     mcpServers: mergeServerMaps(base.mcpServers, next.mcpServers),
-    ...(imports !== undefined ? { imports } : {}),
-    ...(settings !== undefined ? { settings } : {}),
+    ...(imports === undefined ? {} : { imports }),
+    ...(settings === undefined ? {} : { settings }),
   };
 }
 
@@ -599,7 +599,7 @@ function expandImports(config: McpConfig, cwd = process.cwd()): McpConfig {
 
   return {
     imports: config.imports,
-    ...(config.settings !== undefined ? { settings: config.settings } : {}),
+    ...(config.settings === undefined ? {} : { settings: config.settings }),
     mcpServers: mergeServerMaps(importedServers, config.mcpServers),
   };
 }
@@ -703,7 +703,7 @@ function validateConfig(raw: unknown): McpConfig {
   return {
     mcpServers: toServerEntries(raw.mcpServers ?? raw["mcp-servers"]),
     ...(Array.isArray(raw.imports) ? { imports: raw.imports as ImportKind[] } : {}),
-    ...(raw.settings !== undefined ? { settings: raw.settings as McpSettings } : {}),
+    ...(raw.settings === undefined ? {} : { settings: raw.settings as McpSettings }),
   };
 }
 
@@ -1014,7 +1014,7 @@ export function writeProjectServerDisabledOverride(
     }
   }
 
-  const serverKey = raw.mcpServers !== undefined ? "mcpServers" : raw["mcp-servers"] !== undefined ? "mcp-servers" : "mcpServers";
+  const serverKey = raw.mcpServers === undefined ? raw["mcp-servers"] === undefined ? "mcpServers" : "mcp-servers" : "mcpServers";
   const rawServers = raw[serverKey];
   if (rawServers !== undefined && (!rawServers || typeof rawServers !== "object" || Array.isArray(rawServers))) {
     throw new Error(`Failed to update project MCP override at ${filePath}: ${serverKey} must be an object`);
@@ -1227,7 +1227,7 @@ export function getServerProvenance(overridePath?: string, cwd = process.cwd()):
       provenance.set(name, {
         path: source.writePath,
         kind: source.kind,
-        ...(source.importKind !== undefined ? { importKind: source.importKind } : {}),
+        ...(source.importKind === undefined ? {} : { importKind: source.importKind }),
       });
     }
   }
