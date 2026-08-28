@@ -378,8 +378,8 @@ function mergeConfigs(base, next) {
     const settings = next.settings ? { ...base.settings, ...next.settings } : base.settings;
     return {
         mcpServers: mergeServerMaps(base.mcpServers, next.mcpServers),
-        ...(imports !== undefined ? { imports } : {}),
-        ...(settings !== undefined ? { settings } : {}),
+        ...(imports === undefined ? {} : { imports }),
+        ...(settings === undefined ? {} : { settings }),
     };
 }
 // Credential-bearing fields whose value is bound to a specific server `url`.
@@ -467,7 +467,7 @@ function expandImports(config, cwd = process.cwd()) {
     }
     return {
         imports: config.imports,
-        ...(config.settings !== undefined ? { settings: config.settings } : {}),
+        ...(config.settings === undefined ? {} : { settings: config.settings }),
         mcpServers: mergeServerMaps(importedServers, config.mcpServers),
     };
 }
@@ -560,7 +560,7 @@ function validateConfig(raw) {
     return {
         mcpServers: toServerEntries(raw.mcpServers ?? raw["mcp-servers"]),
         ...(Array.isArray(raw.imports) ? { imports: raw.imports } : {}),
-        ...(raw.settings !== undefined ? { settings: raw.settings } : {}),
+        ...(raw.settings === undefined ? {} : { settings: raw.settings }),
     };
 }
 function toServerEntries(servers) {
@@ -841,7 +841,7 @@ export function writeProjectServerDisabledOverride(overridePath, cwd, serverName
             throw new Error(`Failed to read project MCP override at ${filePath}: ${error instanceof Error ? error.message : String(error)}`, { cause: error });
         }
     }
-    const serverKey = raw.mcpServers !== undefined ? "mcpServers" : raw["mcp-servers"] !== undefined ? "mcp-servers" : "mcpServers";
+    const serverKey = raw.mcpServers === undefined ? raw["mcp-servers"] === undefined ? "mcpServers" : "mcp-servers" : "mcpServers";
     const rawServers = raw[serverKey];
     if (rawServers !== undefined && (!rawServers || typeof rawServers !== "object" || Array.isArray(rawServers))) {
         throw new Error(`Failed to update project MCP override at ${filePath}: ${serverKey} must be an object`);
@@ -1038,7 +1038,7 @@ export function getServerProvenance(overridePath, cwd = process.cwd()) {
             provenance.set(name, {
                 path: source.writePath,
                 kind: source.kind,
-                ...(source.importKind !== undefined ? { importKind: source.importKind } : {}),
+                ...(source.importKind === undefined ? {} : { importKind: source.importKind }),
             });
         }
     }

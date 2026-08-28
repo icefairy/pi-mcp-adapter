@@ -1034,7 +1034,7 @@ describe("mcp-auth-flow explicit auth", () => {
 
     const probeInit = mocks.fetch.mock.calls[0]?.[1] as RequestInit;
     expect(new Headers(probeInit.headers).get("x-tenant")).toBe("tenant-a");
-    expect(JSON.parse(String(probeInit.body)).params.clientInfo.name).toBe("pi-mcp-adapter");
+    expect(JSON.parse(String(probeInit.body)).params.clientInfo.name).toBe("@icefairy/pi-mcp-adapter");
     expect(mocks.sdkAuth).toHaveBeenNthCalledWith(1, expect.anything(), {
       serverUrl: "https://api.example.com/mcp",
       resourceMetadataUrl: new URL(resourceMetadataUrl),

@@ -272,7 +272,7 @@ async function probeAuthDiscovery(serverUrl: string, definition?: ServerEntry, s
         params: {
           protocolVersion: LATEST_PROTOCOL_VERSION,
           capabilities: {},
-          clientInfo: { name: "pi-mcp-adapter", version: "2.11.0" },
+          clientInfo: { name: "@icefairy/pi-mcp-adapter", version: "2.11.0" },
         },
       }),
       ...(discoverySignal ? { signal: discoverySignal } : {}),

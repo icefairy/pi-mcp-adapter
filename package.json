@@ -1,5 +1,5 @@
 {
-  "name": "pi-mcp-adapter",
+  "name": "@icefairy/pi-mcp-adapter",
   "version": "2.29.0",
   "description": "MCP (Model Context Protocol) adapter extension for Pi coding agent",
   "type": "module",
